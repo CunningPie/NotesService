@@ -9,14 +9,14 @@
                 <div class="params">
                     <h3>Параметры точки</h3>
                     <label for="radius">Радиус точки</label>
-                    <textarea class="radius-input" id="radius" maxlength="5" placeholder="радиус">30</textarea>
+                    <input class="radius-input" id="radius" type="number" placeholder="радиус" min="1" value="30"></input>
                     <label for="point-color">Цвет точки</label>
                     <input class="color-input" type="color" id="point-color" value="#ff0000">
                 </div>
                 <div id="selected-point-params" hidden="true">
                     <h3>Выбранная точка</h3>
                     <label for="selected-point-radius">Радиус точки</label>
-                    <textarea class="radius-input" id="selected-point-radius" maxlength="5" placeholder="радиус">30</textarea>
+                    <input class="radius-input" id="selected-point-radius" type="number" placeholder="радиус" min="1" value="30"></input>
                     <label for="selected-point-color">Цвет точки</label>
                     <input class="color-input" type="color" id="selected-point-color" value="#ff0000">
                     <button id="save-changes">Сохранить изменения</button>

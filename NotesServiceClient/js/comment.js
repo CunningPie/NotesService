@@ -1,10 +1,9 @@
 export class Comment {
-    comments = [];
+  comments = [];
 
-    constructor(id, text, color)
-    {
-        this.id = id;
-        this.text = text;
-        this.color = color;
-    }
+  constructor(id, text, color) {
+    this.id = id;
+    this.text = text;
+    this.color = color;
+  }
 }
