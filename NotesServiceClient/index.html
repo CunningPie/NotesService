@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link rel="stylesheet" href="styles/styles.css">
+    </head>
+    <body>
+        <div class="row">
+            <div class="column params-window">
+                <div class="params">
+                    <h3>Параметры точки</h3>
+                    <label for="radius">Радиус точки</label>
+                    <textarea class="radius-input" id="radius" maxlength="5" placeholder="радиус">30</textarea>
+                    <label for="point-color">Цвет точки</label>
+                    <input class="color-input" type="color" id="point-color" value="#ff0000">
+                </div>
+                <div id="selected-point-params" hidden="true">
+                    <h3>Выбранная точка</h3>
+                    <label for="selected-point-radius">Радиус точки</label>
+                    <textarea class="radius-input" id="selected-point-radius" maxlength="5" placeholder="радиус">30</textarea>
+                    <label for="selected-point-color">Цвет точки</label>
+                    <input class="color-input" type="color" id="selected-point-color" value="#ff0000">
+                    <button id="save-changes">Сохранить изменения</button>
+                    <label for="add-comment">Комментарий</label>
+                    <textarea class="comment-input" id="comment-text" placeholder="текст комментария"></textarea>
+                    <label for="comment-color">Цвет фона</label>
+                    <input class="color-input" type="color" id="comment-color" value="#ffffff">
+                    <button id="add-comment">Добавить комментарий</button>
+
+                </div>
+            </div>
+            <div class="column canvas">
+                <div id="konva-holder"></div>
+                <div id="menu">
+                    <button id="add-comment"> Добавить комментарий </button>
+                    <button id="delete-button"> Удалить </button>
+                </div>
+            </div>
+            <div class="column comment-editor">
+                <div id="comments"></div>
+            </div>
+        </div>
+    <script src="node_modules/jquery/dist/jquery.min.js"></script>
+    <script src="node_modules/konva/konva.min.js"></script>
+    <script src="node_modules/@progress/kendo-ui/umd/kendo.all.min.js"></script>
+    <script src="./js/index.js" type="module"></script>
+    </body>
+</html>

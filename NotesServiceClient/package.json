@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "@progress/kendo-ui": "^2023.3.1114",
+    "konva": "^9.2.3"
+  }
+}
