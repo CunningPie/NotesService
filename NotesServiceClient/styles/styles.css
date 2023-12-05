@@ -23,27 +23,6 @@ label {
     background-color: rgb(223, 223, 223);
 }
 
-#menu {
-    display: none;
-    position: absolute;
-    width: 100px;
-    background-color: white;
-    box-shadow: 0 0 15px grey;
-    border-radius: 3px;
-  }
-
-#menu button {
-  width: 100%;
-  background-color: white;
-  border: none;
-  margin: 0;
-  padding: 10px;
-}
-
-#menu button:hover {
-  background-color: gray;
-}
-
 .column {
   float: left;
   padding: 5px;
@@ -66,4 +45,3 @@ label {
   display: table;
   clear: both;
 }
-

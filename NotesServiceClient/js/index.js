@@ -6,8 +6,6 @@ import { Comment } from "./comment.js";
 $(document).ready( () => {
     let notes = [];
     let container =  document.getElementById('konva-holder');
-    console.log(container.offsetWidth);
-    console.log(window.innerHeight);
 
     let stage = new Konva.Stage({
         container: "konva-holder",  
@@ -22,7 +20,54 @@ $(document).ready( () => {
 
     let selectedPoint;
 
-    stage.on('pointerdblclick', function () {
+    let commentAttributes = (data) => {
+        return { style: `background-color: ${data.color} ` }
+      }
+
+    $("#comments").kendoGrid({
+        height: 0,
+        columns: [{
+            field: "text",
+            title: "Комментарий",
+            fontSize: 16,
+            width: 0
+        }, {
+            field: "color",
+            title: "Цвет фона",
+            width: 0,
+            attributes: commentAttributes
+        }],
+        editable: "incell",
+        save: (e) =>
+        {
+            let updatedComment = {
+                id: e.model.id,
+                text: e.model.text,
+                color: e.model.color,
+                pointId: selectedPoint.getParent().id()};
+
+            console.log(e);
+            if (e.values.color)
+            {
+                let commentRect = selectedPoint.getParent().findOne(`#commentRect${e.model.id}`);
+                commentRect.fill(e.values.color);
+                updatedComment.color = e.values.color;
+                notes[selectedPoint.getParent().id()].comments.filter((c) => c.id == e.model.id)[0].color = e.values.color;
+            }
+
+            if (e.values.text)
+            {
+                let commentText = selectedPoint.getParent().findOne(`#comment${e.model.id}`);
+                commentText.text(e.values.text);
+                updatedComment.text = e.values.text;
+                notes[selectedPoint.getParent().id()].comments.filter((c) => c.id == e.model.id)[0].text = e.values.text;
+            }
+
+            apiComments.updateComment(URLS.dev, updatedComment);
+        }
+    });
+
+    stage.on('dblclick', function () {
         let pointerPos = stage.getPointerPosition();
         let radius = document.getElementById('radius').value;
         let color = document.getElementById('point-color').value;
@@ -41,8 +86,9 @@ $(document).ready( () => {
             });
 
             note.on('dragstart', () => {
-                note.findOne(".circle").fire('pointerclick');
+                note.findOne(".circle").fire('click');
                 console.log(selectedPoint);
+                console.log('pupupupu');
             });
 
             note.on('dragend', (e) => {
@@ -72,16 +118,19 @@ $(document).ready( () => {
                 name: 'circle'
             });
 
-            circle.on('pointerdblclick', function () {
+            circle.on('dblclick', function () {
                 apiPoints.deletePoint(URLS.dev, {
                     id: this.getParent().id()
                 });
                 delete notes[this.getParent().id()];
-                console.log(notes);
+
+                let paramsWindow = document.getElementById("selected-point-params");        
+                paramsWindow.hidden = true;
+
                 this.getParent().destroy()
             });
-        
-            circle.on('pointerclick', function () {
+
+            circle.on('click', function () {
                 selectedPoint?.strokeWidth(0);
                 selectedPoint = this;
                 this.strokeWidth(5);
@@ -92,22 +141,8 @@ $(document).ready( () => {
                 paramsWindow.querySelector("#selected-point-radius").value = this.radius();
                 paramsWindow.querySelector("#selected-point-color").value = this.fill();
 
-                console.log(notes[selectedPoint.getParent().id()]);
-                $("#comments").kendoGrid
-                $("#comments").kendoGrid({
-                    dataSource: notes[selectedPoint.getParent().id()].comments,
-                    height: 0,
-                    columns: [{
-                        field: "text",
-                        title: "Comments",
-                        width: 0
-                    }],
-                    editable: "incell",
-                    edit: (e) => {
-                        let input = $(e.container.find('input'))
-                        console.log(input[0].value);
-                    }
-                });
+                let grid = $("#comments").data("kendoGrid");
+                grid.dataSource.data(notes[this.getParent().id()].comments);    
             });
 
             note.add(circle);
@@ -117,31 +152,6 @@ $(document).ready( () => {
             });
 
     })
-
-    window.addEventListener('click', () => {
-        menuNode.style.display = 'none';
-    });
-
-    let currentShape;
-    let menuNode = document.getElementById('menu');
-
-    document.getElementById('delete-button').addEventListener('click', () => {
-        currentShape.destroy();
-    });
-
-    stage.on('contextmenu', function (e) {
-        e.evt.preventDefault();
-        if (e.target === stage) {
-            return;
-        }
-        currentShape = e.target;
-        menuNode.style.display = 'initial';
-        var containerRect = stage.container().getBoundingClientRect();
-        menuNode.style.top =
-        containerRect.top + stage.getPointerPosition().y + 10 + 'px';
-        menuNode.style.left =
-        containerRect.left + stage.getPointerPosition().x + 10 + 'px';
-    });
 
     document.getElementById('save-changes').addEventListener('click', () => {
         let color = document.getElementById('selected-point-color').value;
@@ -186,7 +196,8 @@ $(document).ready( () => {
                     text: commentText,
                     fontSize: 16,
                     padding: 5,
-                    align: 'center'
+                    align: 'center',
+                    id: `comment${data.id}`
                 });
         
                 text.x(selectedPoint.getAttr('x') - text.width() / 2);
@@ -200,7 +211,8 @@ $(document).ready( () => {
                     height: text.height(),
                     strokeWidth: 2,
                     stroke: 'black',
-                    fill: commentColor
+                    fill: commentColor,
+                    id: `commentRect${data.id}`
                 }));
                 selectedPoint.getParent().add(text);
         
